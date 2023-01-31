@@ -402,6 +402,43 @@ func (c *ContainerClient) DeleteItem(
 	return newItemResponse(azResponse)
 }
 
+func (c *ContainerClient) DeleteAllItemsByPartitionKey(
+	ctx context.Context,
+	partitionKey PartitionKey,
+	o *ItemOptions) (ItemResponse, error) {
+	h := headerOptionsOverride{
+		partitionKey: &partitionKey,
+	}
+
+	if o == nil {
+		o = &ItemOptions{}
+	}
+
+	operationContext := pipelineRequestOptions{
+		resourceType:          resourceTypePartitionKey,
+		resourceAddress:       c.link,
+		isWriteOperation:      true,
+		headerOptionsOverride: &h}
+
+	path, err := generatePathForNameBased(resourceTypePartitionKey, operationContext.resourceAddress, false)
+	if err != nil {
+		return ItemResponse{}, err
+	}
+
+	azResponse, err := c.database.client.sendPostRequest(
+		path,
+		ctx,
+		nil,
+		operationContext,
+		o,
+		nil)
+	if err != nil {
+		return ItemResponse{}, err
+	}
+
+	return newItemResponse(azResponse)
+}
+
 // NewQueryItemsPager executes a single partition query in a Cosmos container.
 // query - The SQL query to execute.
 // partitionKey - The partition key to scope the query on.

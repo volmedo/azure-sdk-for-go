@@ -19,5 +19,6 @@ const (
 	resourceTypeOffer               resourceType = 113
 	resourceTypeDatabaseAccount     resourceType = 118
 	resourceTypePartitionKeyRange   resourceType = 125
+	resourceTypePartitionKey        resourceType = 136
 	resourceTypeClientEncryptionKey resourceType = 141
 )
