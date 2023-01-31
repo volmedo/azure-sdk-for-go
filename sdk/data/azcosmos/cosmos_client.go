@@ -406,6 +406,10 @@ func (c *Client) createRequest(
 }
 
 func (c *Client) attachContent(content interface{}, req *policy.Request) error {
+	if content == nil {
+		return nil
+	}
+
 	var err error
 	switch v := content.(type) {
 	case []byte:
